@@ -127,8 +127,8 @@ setupCanvas();
 // MAPS - portrait friendly, function of W,H
 function makeMaps(){
   return [
-    [{x:W*0.15,y:0},{x:W*0.15,y:H*0.13},{x:W*0.85,y:H*0.13},{x:W*0.85,y:H*0.26},{x:W*0.15,y:H*0.26},{x:W*0.15,y:H*0.39},{x:W*0.85,y:H*0.39},{x:W*0.85,y:H*0.52},{x:W*0.15,y:H*0.52},{x:W*0.15,y:H*0.65},{x:W*0.85,y:H*0.65},{x:W*0.85,y:H*0.78},{x:W*0.15,y:H*0.78},{x:W*0.15,y:H*0.91},{x:W*0.5,y:H*0.91},{x:W*0.5,y:H}],
-    [{x:W*0.25,y:0},{x:W*0.25,y:H*0.15},{x:W*0.75,y:H*0.15},{x:W*0.75,y:H*0.3},{x:W*0.25,y:H*0.3},{x:W*0.25,y:H*0.45},{x:W*0.75,y:H*0.45},{x:W*0.75,y:H*0.6},{x:W*0.25,y:H*0.6},{x:W*0.25,y:H*0.75},{x:W*0.75,y:H*0.75},{x:W*0.75,y:H*0.9},{x:W*0.5,y:H*0.9},{x:W*0.5,y:H}],
+    [{x:W*0.2,y:0},{x:W*0.2,y:H*0.16},{x:W*0.8,y:H*0.16},{x:W*0.8,y:H*0.4},{x:W*0.2,y:H*0.4},{x:W*0.2,y:H*0.64},{x:W*0.8,y:H*0.64},{x:W*0.8,y:H*0.86},{x:W*0.45,y:H*0.86},{x:W*0.45,y:H}],
+    [{x:W*0.15,y:0},{x:W*0.15,y:H*0.13},{x:W*0.85,y:H*0.13},{x:W*0.85,y:H*0.28},{x:W*0.5,y:H*0.28},{x:W*0.5,y:H*0.42},{x:W*0.15,y:H*0.42},{x:W*0.15,y:H*0.58},{x:W*0.85,y:H*0.58},{x:W*0.85,y:H*0.73},{x:W*0.35,y:H*0.73},{x:W*0.35,y:H*0.88},{x:W*0.85,y:H*0.88},{x:W*0.85,y:H}],
     [{x:W*0.5,y:0},{x:W*0.5,y:H*0.35},{x:W*0.18,y:H*0.35},{x:W*0.18,y:H*0.7},{x:W*0.85,y:H*0.7},{x:W*0.85,y:H}]
   ];
 }
@@ -259,6 +259,10 @@ function isNearPath(px,py,extra){
   }
   return false;
 }
+function isValidBuildSpot(px,py){
+  if(isOnPath(px,py))return false;
+  return isNearPath(px,py,GRID*1.15);
+}
 function isOccupied(gx,gy,skip){
   return towers.some(function(t){return t!==skip&&Math.abs(t.gx-gx)<GRID*0.85&&Math.abs(t.gy-gy)<GRID*0.85;});
 }
@@ -287,18 +291,18 @@ function initGrass(){
     gc.fillStyle=cols[Math.floor(Math.random()*cols.length)];
     gc.beginPath();gc.arc(0,0,2+Math.random()*2,0,Math.PI*2);gc.fill();gc.restore();
   }
-  for(var k=0;k<Math.floor(density/6);k++){
+  for(var k=0;k<Math.floor(density/4);k++){
     var tx=Math.random()*W,ty=Math.random()*H;
-    if(isOnPath(tx,ty)||isNearPath(tx,ty,70))continue;
-    gc.save();gc.translate(tx,ty);gc.globalAlpha=0.55+Math.random()*0.3;
-    gc.fillStyle='#6b4226';gc.fillRect(-4,0,8,14);
-    var cr=14+Math.random()*12;
-    var h1=115+Math.random()*25,s1=50+Math.random()*20,l1=22+Math.random()*12;
+    // Denser trees in unbuildable areas
+    var isBuildZone = isValidBuildSpot(tx, ty);
+    if(isOnPath(tx,ty) || (isBuildZone && Math.random() > 0.1)) continue;
+    
+    gc.save();gc.translate(tx,ty);gc.globalAlpha=0.6+Math.random()*0.3;
+    gc.fillStyle='#6b4226';gc.fillRect(-3,0,6,12);
+    var cr=12+Math.random()*10;
+    var h1=110+Math.random()*30,s1=40+Math.random()*30,l1=20+Math.random()*15;
     gc.fillStyle='hsl('+h1+','+s1+'%,'+l1+'%)';
     gc.beginPath();gc.arc(0,-cr*0.6,cr,0,Math.PI*2);gc.fill();
-    var h2=120+Math.random()*20,s2=55+Math.random()*15,l2=28+Math.random()*10;
-    gc.fillStyle='hsl('+h2+','+s2+'%,'+l2+'%)';
-    gc.beginPath();gc.arc(-cr*0.3,-cr*0.9,cr*0.7,0,Math.PI*2);gc.fill();
     gc.restore();
   }
 }
@@ -463,16 +467,14 @@ function cancelMove(){if(movingTower){movingTower.moving=false;movingTower=null;
 function handleTap(cx, cy){
   if(gameOver||showingModal)return;
   if(movingTower){
-    if(isOnPath(cx,cy)){floatText(cx,cy,'無效位置！',45,'#ff8080');return;}
     var gx=snapGrid(cx),gy=snapGrid(cy);
-    if(isOnPath(gx,gy)||isOccupied(gx,gy,movingTower)){floatText(cx,cy,'位置被佔用！',45,'#ff8080');return;}
+    if(!isValidBuildSpot(gx,gy)||isOccupied(gx,gy,movingTower)){floatText(cx,cy,'森林中不能蓋塔！',40,'#ff8080');return;}
     movingTower.gx=gx;movingTower.gy=gy;movingTower.moving=false;movingTower=null;sPlace();return;
   }
   for(var i=0;i<towers.length;i++){if(dist({x:towers[i].gx,y:towers[i].gy},{x:cx,y:cy})<28){showPopupAt(towers[i],cx,cy);return;}}
   closePopup();
-  if(isOnPath(cx,cy))return;
   var gx2=snapGrid(cx),gy2=snapGrid(cy);
-  if(isOnPath(gx2,gy2)||isOccupied(gx2,gy2,null)){floatText(cx,cy,'位置被佔用！',40,'#ff8080');return;}
+  if(!isValidBuildSpot(gx2,gy2)||isOccupied(gx2,gy2,null)){floatText(cx,cy,'森林中不能蓋塔！',40,'#ff8080');return;}
   var def=TD[selType];
   if(gold<def.cost){floatText(cx,cy,'金幣不足！',50,'#ff8080');return;}
   gold-=def.cost;
@@ -845,7 +847,7 @@ function drawRangePreview(){
   }
   var gx=snapGrid(mx),gy=snapGrid(my);
   var def=TD[selType];
-  var ok=!isOnPath(gx,gy)&&!isOccupied(gx,gy,null);
+  var ok=isValidBuildSpot(gx,gy)&&!isOccupied(gx,gy,null);
   ctx.save();ctx.globalAlpha=0.1;ctx.fillStyle=ok?def.col:'#ff4444';ctx.beginPath();ctx.arc(gx,gy,def.range,0,Math.PI*2);ctx.fill();ctx.globalAlpha=0.35;ctx.strokeStyle=ok?def.col:'#ff4444';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();
   if(ok) drawTower({type:selType,def:def,gx:gx,gy:gy,level:0,shootAnim:0,bob:0,moving:true});
 }
@@ -853,7 +855,7 @@ function drawMovePreview(){
   if(!movingTower||!canvas._mx)return;
   var mx=canvas._mx,my=canvas._my;
   var gx=snapGrid(mx),gy=snapGrid(my);
-  var ok=!isOnPath(gx,gy)&&!isOccupied(gx,gy,movingTower);
+  var ok=isValidBuildSpot(gx,gy)&&!isOccupied(gx,gy,movingTower);
   var st=tStats(movingTower);
   ctx.save();ctx.globalAlpha=0.1;ctx.fillStyle=ok?movingTower.def.col:'#ff4444';ctx.beginPath();ctx.arc(gx,gy,st.range,0,Math.PI*2);ctx.fill();ctx.globalAlpha=0.35;ctx.strokeStyle=ok?movingTower.def.col:'#ff4444';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();
   if(ok) drawTower({type:movingTower.type,def:movingTower.def,gx:gx,gy:gy,level:movingTower.level,shootAnim:0,bob:0,moving:true});
