@@ -49,7 +49,7 @@ body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;-webk
 <body>
 <div id="topBar">
   <div class="stat" id="liveStat">❤️ 20</div>
-  <div class="stat" id="goldStat">💰 300</div>
+  <div class="stat" id="goldStat">💰 900</div>
   <div class="stat" id="waveStat">🌊 0</div>
   <div class="stat" id="scoreStat">⭐ 0</div>
 </div>
@@ -58,12 +58,12 @@ body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;-webk
 </div>
 <div id="bottomBar">
   <div id="towerRow">
-    <button class="tbtn sel" data-type="normal" onclick="sel('normal')">🐱弓箭貓<br><small>$40</small></button>
-    <button class="tbtn" data-type="fat" onclick="sel('fat')">😸砲擊貓<br><small>$70</small></button>
-    <button class="tbtn" data-type="magic" onclick="sel('magic')">😻魔法貓<br><small>$110</small></button>
-    <button class="tbtn" data-type="ice" onclick="sel('ice')">😼冰凍貓<br><small>$90</small></button>
-    <button class="tbtn" data-type="sniper" onclick="sel('sniper')">🐈狙擊貓<br><small>$130</small></button>
-    <button class="tbtn" data-type="rapid" onclick="sel('rapid')">😽速射貓<br><small>$80</small></button>
+    <button class="tbtn sel" data-type="normal" onclick="sel('normal')">🐱弓箭貓<br><small>$120</small></button>
+    <button class="tbtn" data-type="fat" onclick="sel('fat')">😸砲擊貓<br><small>$210</small></button>
+    <button class="tbtn" data-type="magic" onclick="sel('magic')">😻魔法貓<br><small>$330</small></button>
+    <button class="tbtn" data-type="ice" onclick="sel('ice')">😼冰凍貓<br><small>$270</small></button>
+    <button class="tbtn" data-type="sniper" onclick="sel('sniper')">🐈狙擊貓<br><small>$390</small></button>
+    <button class="tbtn" data-type="rapid" onclick="sel('rapid')">😽速射貓<br><small>$240</small></button>
   </div>
   <div id="ctrlRow">
     <button id="speedBtn" onclick="toggleSpeed()">▶ 1x</button>
@@ -75,6 +75,7 @@ body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;-webk
   <div class="pname" id="popupName"></div>
   <div class="plevel" id="popupLevel"></div>
   <button id="upgradeBtn" onclick="doUpgrade()"></button>
+  <button id="downgradeBtn" onclick="doDowngrade()"></button>
   <button onclick="doMove()">🔄 移動</button>
   <button class="sell-btn" onclick="doSell()">💰 賣出 (<span id="sellPrice"></span>)</button>
   <button onclick="closePopup()">✖ 取消</button>
@@ -97,6 +98,9 @@ body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;-webk
 
 <div id="mapSelect">
   <h2>🌲 選擇地圖</h2>
+  <div style="margin-bottom: 15px; color: #f5d98a; font-size: 16px; font-weight: bold; background: linear-gradient(135deg,#3d2b1f,#2a1e12); padding: 10px 20px; border: 2px solid #6b4226; border-radius: 10px;">
+    起始波次: <input type="number" id="startWaveInput" value="1" min="1" max="100" style="width: 60px; background: #1a1008; color: #f5d020; border: 1px solid #8b5a2b; border-radius: 5px; padding: 4px 5px; font-weight: bold; text-align: center; outline: none;">
+  </div>
   <div class="mapCard" onclick="startGame(0)">🌿 蜿蜒森林<p>S形彎道，中等難度</p></div>
   <div class="mapCard" onclick="startGame(1)">🍄 迷宮小路<p>多轉角，敵人行進慢</p></div>
   <div class="mapCard" onclick="startGame(2)">⚡ 直衝大道<p>短路線，高難度挑戰</p></div>
@@ -186,41 +190,41 @@ function sEvent(){[392,494,587,784].forEach(function(f,i){nt(f,'sine',0.12,0.22,
 
 // TOWER DEFS
 var TD = {
-  normal:{name:'弓箭貓',emoji:'🐱',cost:40, dmg:8, range:90, rate:55, col:'#e8b8c8',proj:'normal'},
-  fat:   {name:'砲擊貓',emoji:'😸',cost:70, dmg:22,range:100,rate:120,col:'#e8c878',proj:'fat'},
-  magic: {name:'魔法貓',emoji:'😻',cost:110,dmg:20,range:110,rate:90, col:'#c8a8f8',proj:'magic',aoe:true,maxTargets:4},
-  ice:   {name:'冰凍貓',emoji:'😼',cost:90, dmg:5, range:95, rate:70, col:'#a8e8f8',proj:'ice',slow:true},
-  sniper:{name:'狙擊貓',emoji:'🐈',cost:130,dmg:55,range:210,rate:180,col:'#a8e8a8',proj:'sniper'},
-  rapid: {name:'速射貓',emoji:'😽',cost:80, dmg:4, range:80, rate:25, col:'#f8d0a0',proj:'rapid'}
+  normal:{name:'弓箭貓',emoji:'🐱',cost:120, dmg:24, range:90, rate:55, col:'#e8b8c8',proj:'normal'},
+  fat:   {name:'砲擊貓',emoji:'😸',cost:210, dmg:66,range:100,rate:120,col:'#e8c878',proj:'fat'},
+  magic: {name:'魔法貓',emoji:'😻',cost:330,dmg:60,range:110,rate:90, col:'#c8a8f8',proj:'magic',aoe:true,maxTargets:4},
+  ice:   {name:'冰凍貓',emoji:'😼',cost:270, dmg:15, range:95, rate:70, col:'#a8e8f8',proj:'ice',slow:true},
+  sniper:{name:'狙擊貓',emoji:'🐈',cost:390,dmg:165,range:210,rate:180,col:'#a8e8a8',proj:'sniper'},
+  rapid: {name:'速射貓',emoji:'😽',cost:240, dmg:12, range:80, rate:25, col:'#f8d0a0',proj:'rapid'}
 };
 function upgCost(base,lv){return Math.floor(base * Math.pow(1.3, lv-1));}
 function getTowerTotalCost(t){var cost = t.def.cost; for(var i=1; i<=t.level; i++) cost += upgCost(t.def.cost, i); return cost;}
 
 // ENEMY DEFS
 var ED = [
-  {type:'rat',    emoji:'🐭',hp:105, spd:1.0,reward:12,sz:15,col:'#cc7755'},
-  {type:'fast',   emoji:'🐁',hp:70,  spd:2.0,reward:15,sz:12,col:'#ddaa44'},
-  {type:'fat',    emoji:'🐀',hp:330, spd:0.55,reward:24,sz:19,col:'#aa88dd'},
-  {type:'armored',emoji:'🦔',hp:570, spd:0.65,reward:35,sz:19,col:'#6688bb'},
-  {type:'boss',   emoji:'👑',hp:1500,spd:0.48,reward:95,sz:23,col:'#ee8822'},
-  {type:'speeder',emoji:'🐇',hp:90,  spd:2.8,reward:20,sz:13,col:'#ffaacc'},
-  {type:'tank',   emoji:'🦏',hp:1200,spd:0.45,reward:55,sz:21,col:'#8899aa'},
-  {type:'shield', emoji:'🛡',hp:300, spd:0.9,reward:40,sz:16,col:'#aabbee',shieldMax:180},
-  {type:'split',  emoji:'🐀',hp:240, spd:0.8,reward:30,sz:16,col:'#ddaa88',split:true},
-  {type:'ghost',  emoji:'👻',hp:200, spd:1.4,reward:32,sz:15,col:'#ddddff',ghost:true},
-  {type:'megaboss',emoji:'🐉',hp:4500,spd:0.38,reward:220,sz:27,col:'#ff5500'}
+  {type:'rat',    emoji:'🐭',hp:315, spd:1.0,reward:36,sz:15,col:'#cc7755'},
+  {type:'fast',   emoji:'🐁',hp:210,  spd:2.0,reward:45,sz:12,col:'#ddaa44'},
+  {type:'fat',    emoji:'🐀',hp:990, spd:0.55,reward:72,sz:19,col:'#aa88dd'},
+  {type:'armored',emoji:'🦔',hp:1710, spd:0.65,reward:105,sz:19,col:'#6688bb'},
+  {type:'boss',   emoji:'👑',hp:4500,spd:0.48,reward:285,sz:23,col:'#ee8822'},
+  {type:'speeder',emoji:'🐇',hp:270,  spd:2.8,reward:60,sz:13,col:'#ffaacc'},
+  {type:'tank',   emoji:'🦏',hp:3600,spd:0.45,reward:165,sz:21,col:'#8899aa'},
+  {type:'shield', emoji:'🛡',hp:900, spd:0.9,reward:120,sz:16,col:'#aabbee',shieldMax:540},
+  {type:'split',  emoji:'🐀',hp:720, spd:0.8,reward:90,sz:16,col:'#ddaa88',split:true},
+  {type:'ghost',  emoji:'👻',hp:600, spd:1.4,reward:96,sz:15,col:'#ddddff',ghost:true},
+  {type:'megaboss',emoji:'🐉',hp:13500,spd:0.38,reward:660,sz:27,col:'#ff5500'}
 ];
 
 // ENEMY DEFS (End)
 
 // STATE
 var towers=[],enemies=[],projectiles=[],particles=[],vfx=[];
-var gold=300,lives=20,wave=0,score=0,goldMult=1;
+var gold=900,lives=20,wave=0,score=0,goldMult=1;
 var selType='normal',waveRunning=false,gameOver=false,showingModal=false;
 var spawnQueue=[],spawnTimer=0,animId,tick=0,gameSpeed=1;
 var movingTower=null,popupTower=null;
 var waveGold=0,waveKills=0;
-var waveStartGold=300,waveStartScore=0,waveStartTowers=[];
+var waveStartGold=900,waveStartScore=0,waveStartTowers=[];
 var grassCanvas=null;
 var currentMapIdx=0;
 
@@ -331,8 +335,14 @@ function startGame(idx){
   PATH=MAPS[idx];
   document.getElementById('mapSelect').style.display='none';
   towers=[];enemies=[];projectiles=[];particles=[];vfx=[];
-  gold=300;lives=20;wave=0;score=0;goldMult=1;gameSpeed=1;
-  waveStartGold=300;waveStartScore=0;waveStartTowers=[];
+  
+  var sw = parseInt(document.getElementById('startWaveInput').value)||1;
+  if(sw<1) sw=1;
+  var sg = 900;
+  for(var w=1;w<sw;w++){sg+=Math.floor(w*75)+(3+w)*Math.floor(45*(1+w*0.06));}
+  
+  gold=sg;lives=20;wave=sw-1;score=0;goldMult=1;gameSpeed=1;
+  waveStartGold=sg;waveStartScore=0;waveStartTowers=[];
   selType='normal';waveRunning=false;gameOver=false;showingModal=false;
   spawnQueue=[];spawnTimer=0;tick=0;movingTower=null;popupTower=null;
   waveGold=0;waveKills=0;
@@ -370,7 +380,7 @@ function buildWave(){
   if(wave>=6)avail.push(7);
   if(wave>=7)avail.push(6,8);
   if(wave>=9)avail.push(9);
-  var count=8+wave*3;
+  var count=3+wave;
   for(var i=0;i<count;i++){
     var def=ED[avail[Math.floor(Math.random()*avail.length)]];
     var e=Object.assign({},def);
@@ -407,6 +417,9 @@ function showPopupAt(t,cx,cy){
   document.getElementById('popupLevel').textContent=lv===0?'基礎':'★ Lv'+(lv+1);
   var ub=document.getElementById('upgradeBtn');
   var uc=upgCost(t.def.cost,lv+1);ub.textContent='⬆ 升級 $'+uc+(gold<uc?' ✗':'');ub.style.display='block';
+  var db=document.getElementById('downgradeBtn');
+  if(lv>0){var dc=upgCost(t.def.cost,lv);db.textContent='⬇ 降級 (退 $'+dc+')';db.style.display='block';}
+  else db.style.display='none';
   document.getElementById('sellPrice').textContent='$'+getTowerTotalCost(t);
   var p=document.getElementById('popup');p.style.display='block';
   var rect=canvas.getBoundingClientRect();
@@ -426,6 +439,17 @@ function doSell(){
   sSell();updateUI();closePopup();floatText(W/2,H/2,'回收！+'+s+' 💰',55,'#f5d020');
 }
 function doMove(){if(!popupTower)return;movingTower=popupTower;movingTower.moving=true;closePopup();}
+function doDowngrade(){
+  if(!popupTower)return;
+  var lv=popupTower.level||0;
+  if(lv<=0)return;
+  var dc=upgCost(popupTower.def.cost,lv);
+  gold+=dc;popupTower.level=lv-1;sSell();updateUI();
+  floatText(popupTower.gx,popupTower.gy-20,'-Lv',40,'#ff8080');
+  var pp=document.getElementById('popup');
+  var rect=canvas.getBoundingClientRect();
+  showPopupAt(popupTower,parseInt(pp.style.left)-rect.left,parseInt(pp.style.top)-rect.top);
+}
 function doUpgrade(){
   if(!popupTower)return;
   var lv=popupTower.level||0;
@@ -484,7 +508,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){cancelMove(
 // WAVE MODAL
 function showWaveModal(){
   showingModal=true;
-  var bonus=Math.floor(wave*25);gold+=bonus;
+  var bonus=Math.floor(wave*75);gold+=bonus;
   sWaveClear();
   document.getElementById('wm_title').textContent='第 '+wave+' 波完成！ 🎉';
   document.getElementById('wm_kills').textContent='擊敗 '+waveKills+' 隻敵人';
@@ -553,7 +577,7 @@ function deathVfx(x,y,def){
 // UPDATE
 function update(){
   tick++;
-  if(waveRunning&&spawnQueue.length>0){spawnTimer++;if(spawnTimer>=52){spawnTimer=0;spawnEnemy(spawnQueue.shift());}}
+  if(waveRunning&&spawnQueue.length>0){spawnTimer++;if(spawnTimer>=90){spawnTimer=0;spawnEnemy(spawnQueue.shift());}}
   if(waveRunning&&spawnQueue.length===0&&enemies.length===0){waveRunning=false;setTimeout(showWaveModal,500);}
   for(var ei=0;ei<enemies.length;ei++){
     var e=enemies[ei];
@@ -822,17 +846,20 @@ function drawRangePreview(){
       var st=tStats(t);ctx.save();ctx.globalAlpha=0.1;ctx.fillStyle=t.def.col;ctx.beginPath();ctx.arc(t.gx,t.gy,st.range,0,Math.PI*2);ctx.fill();ctx.globalAlpha=0.35;ctx.strokeStyle=t.def.col;ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();return;
     }
   }
-  if(!isOnPath(mx,my)){var def=TD[selType];ctx.save();ctx.globalAlpha=0.1;ctx.fillStyle=def.col;ctx.beginPath();ctx.arc(mx,my,def.range,0,Math.PI*2);ctx.fill();ctx.globalAlpha=0.35;ctx.strokeStyle=def.col;ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();}
+  var gx=snapGrid(mx),gy=snapGrid(my);
+  var def=TD[selType];
+  var ok=!isOnPath(gx,gy)&&!isOccupied(gx,gy,null);
+  ctx.save();ctx.globalAlpha=0.1;ctx.fillStyle=ok?def.col:'#ff4444';ctx.beginPath();ctx.arc(gx,gy,def.range,0,Math.PI*2);ctx.fill();ctx.globalAlpha=0.35;ctx.strokeStyle=ok?def.col:'#ff4444';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  if(ok) drawTower({type:selType,def:def,gx:gx,gy:gy,level:0,shootAnim:0,bob:0,moving:true});
 }
 function drawMovePreview(){
   if(!movingTower||!canvas._mx)return;
   var mx=canvas._mx,my=canvas._my;
-  if(!isOnPath(mx,my)){
-    var gx=snapGrid(mx),gy=snapGrid(my);
-    var ok=!isOnPath(gx,gy)&&!isOccupied(gx,gy,movingTower);
-    ctx.save();ctx.globalAlpha=0.4;ctx.fillStyle=ok?movingTower.def.col:'#ff4444';ctx.beginPath();ctx.arc(mx,my,18,0,Math.PI*2);ctx.fill();
-    ctx.font='18px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(movingTower.def.emoji,mx,my);ctx.restore();
-  }
+  var gx=snapGrid(mx),gy=snapGrid(my);
+  var ok=!isOnPath(gx,gy)&&!isOccupied(gx,gy,movingTower);
+  var st=tStats(movingTower);
+  ctx.save();ctx.globalAlpha=0.1;ctx.fillStyle=ok?movingTower.def.col:'#ff4444';ctx.beginPath();ctx.arc(gx,gy,st.range,0,Math.PI*2);ctx.fill();ctx.globalAlpha=0.35;ctx.strokeStyle=ok?movingTower.def.col:'#ff4444';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  if(ok) drawTower({type:movingTower.type,def:movingTower.def,gx:gx,gy:gy,level:movingTower.level,shootAnim:0,bob:0,moving:true});
 }
 function drawHUD(){
   var msg='';
