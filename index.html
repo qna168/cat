@@ -48,7 +48,7 @@ body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;-webk
 <body>
 <div id="topBar">
   <div class="stat" id="liveStat">❤️ 20</div>
-  <div class="stat" id="goldStat">💰 150</div>
+  <div class="stat" id="goldStat">💰 300</div>
   <div class="stat" id="waveStat">🌊 0</div>
   <div class="stat" id="scoreStat">⭐ 0</div>
 </div>
@@ -226,7 +226,7 @@ var EVENTS = [
 
 // STATE
 var towers=[],enemies=[],projectiles=[],particles=[],vfx=[];
-var gold=150,lives=20,wave=0,score=0,goldMult=1;
+var gold=300,lives=20,wave=0,score=0,goldMult=1;
 var selType='normal',waveRunning=false,gameOver=false,showingModal=false;
 var spawnQueue=[],spawnTimer=0,animId,tick=0,gameSpeed=1;
 var movingTower=null,popupTower=null;
@@ -340,7 +340,7 @@ function startGame(idx){
   PATH=MAPS[idx];
   document.getElementById('mapSelect').style.display='none';
   towers=[];enemies=[];projectiles=[];particles=[];vfx=[];
-  gold=150;lives=20;wave=0;score=0;goldMult=1;gameSpeed=1;
+  gold=300;lives=20;wave=0;score=0;goldMult=1;gameSpeed=1;
   selType='normal';waveRunning=false;gameOver=false;showingModal=false;
   spawnQueue=[];spawnTimer=0;tick=0;movingTower=null;popupTower=null;
   waveGold=0;waveKills=0;pendingEvent=null;
