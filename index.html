@@ -270,9 +270,10 @@ function isValidBuildSpot(px,py){
     var d=Math.hypot(px-cx,py-cy);
     if(d<minDist)minDist=d;
   }
-  // Must be between (Road edge + Margin) and (Road edge + Margin + OneGrid)
-  var margin = 18; // Cat radius
-  return (minDist >= PW/2 + margin) && (minDist <= PW/2 + margin + GRID * 0.9);
+  // Must be between (Road edge + Scaled Margin) and (Road edge + Scaled Margin + OneGrid)
+  var sc = GRID / 36;
+  var visualRadius = 18 * sc;
+  return (minDist >= PW/2 + visualRadius - 2) && (minDist <= PW/2 + visualRadius + GRID * 1.1);
 }
 function isOccupied(gx,gy,skip){
   return towers.some(function(t){return t!==skip&&Math.abs(t.gx-gx)<GRID*0.85&&Math.abs(t.gy-gy)<GRID*0.85;});
@@ -303,8 +304,9 @@ function initGrass(){
     gc.beginPath();gc.arc(0,0,2+Math.random()*2,0,Math.PI*2);gc.fill();gc.restore();
   }
   // Dense Forest in non-buildable areas
-  for(var k=0;k<1000;k++){
+  for(var k=0;k<1200;k++){
     var tx=Math.random()*W,ty=Math.random()*H;
+    // Buffer the build spot slightly so forest doesn't clip into the buildable strip too much
     if(isOnPath(tx,ty) || isValidBuildSpot(tx,ty)) continue;
     
     gc.save();gc.translate(tx,ty);gc.globalAlpha=0.6+Math.random()*0.3;
