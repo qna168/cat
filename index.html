@@ -410,8 +410,8 @@ function killEnemy(e){
 }
 
 // POPUP
-function showPopupAt(t,cx,cy){
-  popupTower=t;
+function updatePopupContent(t){
+  if(!t)return;
   var lv=t.level||0;
   document.getElementById('popupName').textContent=t.def.emoji+' '+t.def.name;
   document.getElementById('popupLevel').textContent=lv===0?'基礎':'★ Lv'+(lv+1);
@@ -421,6 +421,10 @@ function showPopupAt(t,cx,cy){
   if(lv>0){var dc=upgCost(t.def.cost,lv);db.textContent='⬇ 降級 (退 $'+dc+')';db.style.display='block';}
   else db.style.display='none';
   document.getElementById('sellPrice').textContent='$'+getTowerTotalCost(t);
+}
+function showPopupAt(t,cx,cy){
+  popupTower=t;
+  updatePopupContent(t);
   var p=document.getElementById('popup');p.style.display='block';
   var rect=canvas.getBoundingClientRect();
   var pw=p.offsetWidth||190, ph=p.offsetHeight||200;
@@ -446,9 +450,7 @@ function doDowngrade(){
   var dc=upgCost(popupTower.def.cost,lv);
   gold+=dc;popupTower.level=lv-1;sSell();updateUI();
   floatText(popupTower.gx,popupTower.gy-20,'-Lv',40,'#ff8080');
-  var pp=document.getElementById('popup');
-  var rect=canvas.getBoundingClientRect();
-  showPopupAt(popupTower,parseInt(pp.style.left)-rect.left,parseInt(pp.style.top)-rect.top);
+  updatePopupContent(popupTower);
 }
 function doUpgrade(){
   if(!popupTower)return;
@@ -456,9 +458,7 @@ function doUpgrade(){
   var uc=upgCost(popupTower.def.cost,lv+1);
   if(gold<uc){floatText(W/2,H/2,'金幣不足！',50,'#ff8080');return;}
   gold-=uc;popupTower.level=lv+1;sUpgrade();updateUI();spawnUpgradeVfx(popupTower.gx,popupTower.gy);
-  var pp=document.getElementById('popup');
-  var rect=canvas.getBoundingClientRect();
-  showPopupAt(popupTower,parseInt(pp.style.left)-rect.left,parseInt(pp.style.top)-rect.top);
+  updatePopupContent(popupTower);
 }
 function cancelMove(){if(movingTower){movingTower.moving=false;movingTower=null;}}
 
