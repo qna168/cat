@@ -735,9 +735,9 @@ function drawTower(t){
   if(t===popupTower){ctx.strokeStyle='#f5d020';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,catY,22,0,Math.PI*2);ctx.stroke();}
   // 名稱標籤
   ctx.globalAlpha=t.moving?0.55:0.92;
-  ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
-  ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(-20,26,40,13);
-  ctx.fillStyle='#f5e8a0';ctx.fillText(t.def.name,0,28);
+  ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(-22,22,44,14);
+  ctx.fillStyle='#f5e8a0';ctx.fillText(t.def.name,0,29);
   ctx.globalAlpha=1;
   ctx.restore();
 }
@@ -831,7 +831,7 @@ function drawMovePreview(){
 }
 function drawHUD(){
   var msg='';
-  if(!waveRunning&&!showingModal){msg=wave===0?'點地圖放置貓咪 ✦ 點貓咪可升級/移動/賣出':'點「開始波次」繼續';}
+  if(!waveRunning&&!showingModal){msg=wave===0?'':'點「開始波次」繼續';}
   if(movingTower)msg='選擇新位置放置';
   if(msg){ctx.save();ctx.fillStyle='rgba(20,12,5,.7)';ctx.fillRect(0,H-26,W,26);ctx.fillStyle='#e8c87a';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText(msg,W/2,H-9);ctx.restore();}
 }
