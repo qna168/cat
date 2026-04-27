@@ -291,18 +291,17 @@ function initGrass(){
     gc.fillStyle=cols[Math.floor(Math.random()*cols.length)];
     gc.beginPath();gc.arc(0,0,2+Math.random()*2,0,Math.PI*2);gc.fill();gc.restore();
   }
-  for(var k=0;k<Math.floor(density/4);k++){
+  // Dense Forest in non-buildable areas
+  for(var k=0;k<600;k++){
     var tx=Math.random()*W,ty=Math.random()*H;
-    // Denser trees in unbuildable areas
-    var isBuildZone = isValidBuildSpot(tx, ty);
-    if(isOnPath(tx,ty) || (isBuildZone && Math.random() > 0.1)) continue;
+    if(isOnPath(tx,ty) || isValidBuildSpot(tx,ty)) continue;
     
-    gc.save();gc.translate(tx,ty);gc.globalAlpha=0.6+Math.random()*0.3;
-    gc.fillStyle='#6b4226';gc.fillRect(-3,0,6,12);
-    var cr=12+Math.random()*10;
-    var h1=110+Math.random()*30,s1=40+Math.random()*30,l1=20+Math.random()*15;
+    gc.save();gc.translate(tx,ty);gc.globalAlpha=0.7+Math.random()*0.2;
+    gc.fillStyle='#5a3a22';gc.fillRect(-2,0,4,10);
+    var cr=10+Math.random()*12;
+    var h1=100+Math.random()*40,s1=30+Math.random()*30,l1=15+Math.random()*15;
     gc.fillStyle='hsl('+h1+','+s1+'%,'+l1+'%)';
-    gc.beginPath();gc.arc(0,-cr*0.6,cr,0,Math.PI*2);gc.fill();
+    gc.beginPath();gc.arc(0,-cr*0.5,cr,0,Math.PI*2);gc.fill();
     gc.restore();
   }
 }
