@@ -2,55 +2,74 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>貓咪塔防</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;overflow:hidden;}
-#ui{display:flex;gap:5px;padding:6px 10px;background:linear-gradient(180deg,#3d2b1f,#2d1f15);align-items:center;flex-wrap:wrap;border-bottom:3px solid #6b4226;box-shadow:0 3px 12px rgba(0,0,0,.5);}
-.stat{background:linear-gradient(135deg,#5c3a1e,#3d2510);border:2px solid #8b5a2b;border-radius:10px;padding:3px 10px;font-size:13px;font-weight:700;color:#f5d98a;}
-.tbtn{border:2px solid #6b4226;border-radius:10px;padding:3px 8px;font-size:11px;cursor:pointer;background:linear-gradient(135deg,#4a2e18,#3a2010);color:#e8c87a;transition:all .15s;white-space:nowrap;font-weight:600;}
-.tbtn:hover{border-color:#d4a848;}
-.tbtn.sel{border-color:#f5d020;background:linear-gradient(135deg,#7a5020,#5a3810);box-shadow:0 0 8px rgba(245,208,32,.4);}
-#startBtn{background:linear-gradient(135deg,#2d7a2d,#1d5a1d);color:#a0f0a0;border:2px solid #4ab04a;border-radius:10px;padding:5px 13px;cursor:pointer;font-size:13px;font-weight:700;}
-#speedBtn{background:linear-gradient(135deg,#2a5a7a,#1a3a5a);color:#a0d8f8;border:2px solid #4a8ab0;border-radius:10px;padding:5px 10px;cursor:pointer;font-size:13px;font-weight:700;}
-#canvas{display:block;cursor:pointer;}
-.modal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(160deg,#3d2b1f,#2a1e12);border:3px solid #8b5a2b;border-radius:20px;padding:22px 32px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.7);min-width:260px;display:none;z-index:20;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;-webkit-user-select:none;display:flex;flex-direction:column;touch-action:none;}
+#topBar{display:flex;gap:4px;padding:6px 6px;background:linear-gradient(180deg,#3d2b1f,#2d1f15);border-bottom:2px solid #6b4226;flex-shrink:0;align-items:center;}
+.stat{background:linear-gradient(135deg,#5c3a1e,#3d2510);border:2px solid #8b5a2b;border-radius:9px;padding:6px 4px;font-size:13px;font-weight:700;color:#f5d98a;flex:1;text-align:center;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#canvasWrap{flex:1;position:relative;overflow:hidden;background:#1a2e1a;}
+#canvas{display:block;touch-action:none;}
+#bottomBar{display:flex;flex-direction:column;gap:5px;padding:6px;background:linear-gradient(0deg,#3d2b1f,#2d1f15);border-top:2px solid #6b4226;flex-shrink:0;}
+#towerRow{display:flex;gap:5px;overflow-x:auto;padding:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+#towerRow::-webkit-scrollbar{display:none;}
+.tbtn{border:2px solid #6b4226;border-radius:11px;padding:9px 11px;font-size:14px;cursor:pointer;background:linear-gradient(135deg,#4a2e18,#3a2010);color:#e8c87a;white-space:nowrap;font-weight:700;flex-shrink:0;min-width:72px;transition:transform .08s;}
+.tbtn:active{transform:scale(0.94);}
+.tbtn.sel{border-color:#f5d020;background:linear-gradient(135deg,#7a5020,#5a3810);box-shadow:0 0 10px rgba(245,208,32,.5);color:#fff5b0;}
+#ctrlRow{display:flex;gap:6px;}
+#speedBtn{background:linear-gradient(135deg,#2a5a7a,#1a3a5a);color:#a0d8f8;border:2px solid #4a8ab0;border-radius:11px;padding:11px;cursor:pointer;font-size:14px;font-weight:700;flex:1;}
+#speedBtn:active{transform:scale(0.96);}
+#startBtn{background:linear-gradient(135deg,#2d7a2d,#1d5a1d);color:#a0f0a0;border:2px solid #4ab04a;border-radius:11px;padding:11px;cursor:pointer;font-size:15px;font-weight:700;flex:2;}
+#startBtn:active{transform:scale(0.96);}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(160deg,#3d2b1f,#2a1e12);border:3px solid #8b5a2b;border-radius:18px;padding:18px 22px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.7);min-width:260px;max-width:90vw;display:none;z-index:20;}
 .modal h2,.modal h3{color:#f5d98a;margin-bottom:8px;}
-.modal h2{font-size:24px;} .modal h3{font-size:20px;}
+.modal h2{font-size:22px;}.modal h3{font-size:18px;}
 .modal p{color:#c8a86a;font-size:13px;margin-bottom:6px;}
-.modal .big{font-size:26px;color:#f5d020;font-weight:700;margin:8px 0;}
-.modal button{background:linear-gradient(135deg,#2d7a2d,#1d5a1d);color:#a0f0a0;border:2px solid #4ab04a;border-radius:10px;padding:7px 20px;cursor:pointer;font-size:13px;font-weight:700;margin:4px;}
-#popup{position:absolute;background:linear-gradient(160deg,#3d2b1f,#2a1e12);border:2px solid #8b5a2b;border-radius:12px;padding:10px 13px;box-shadow:0 4px 20px rgba(0,0,0,.6);display:none;z-index:15;min-width:158px;}
-#popup .pname{font-size:12px;font-weight:700;color:#f5d98a;margin-bottom:3px;}
-#popup .plevel{font-size:11px;color:#c8a86a;margin-bottom:6px;}
-#popup button{display:block;width:100%;margin-bottom:5px;border:1.5px solid #6b4226;border-radius:7px;padding:4px 9px;font-size:11px;cursor:pointer;background:linear-gradient(135deg,#4a2e18,#3a2010);color:#e8c87a;text-align:left;font-weight:600;}
-#popup button:hover{border-color:#d4a848;}
+.modal .big{font-size:24px;color:#f5d020;font-weight:700;margin:8px 0;}
+.modal button{background:linear-gradient(135deg,#2d7a2d,#1d5a1d);color:#a0f0a0;border:2px solid #4ab04a;border-radius:10px;padding:10px 22px;cursor:pointer;font-size:14px;font-weight:700;margin:4px;}
+.modal button:active{transform:scale(0.96);}
+#popup{position:fixed;background:linear-gradient(160deg,#3d2b1f,#2a1e12);border:2px solid #8b5a2b;border-radius:13px;padding:11px 13px;box-shadow:0 4px 20px rgba(0,0,0,.7);display:none;z-index:15;min-width:175px;}
+#popup .pname{font-size:14px;font-weight:700;color:#f5d98a;margin-bottom:3px;}
+#popup .plevel{font-size:12px;color:#c8a86a;margin-bottom:7px;}
+#popup button{display:block;width:100%;margin-bottom:5px;border:1.5px solid #6b4226;border-radius:8px;padding:9px 11px;font-size:13px;cursor:pointer;background:linear-gradient(135deg,#4a2e18,#3a2010);color:#e8c87a;text-align:left;font-weight:700;}
+#popup button:active{transform:scale(0.97);}
 #popup .sell-btn{border-color:#7a3030;color:#f0a0a0;}
-#mapSelect{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);z-index:30;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
-#mapSelect h2{color:#f5d98a;font-size:24px;margin-bottom:6px;}
-.mapCard{background:linear-gradient(135deg,#3d2b1f,#2a1e12);border:3px solid #6b4226;border-radius:16px;padding:14px 22px;cursor:pointer;color:#e8c87a;font-size:14px;font-weight:700;min-width:200px;text-align:center;transition:all .2s;}
-.mapCard:hover{border-color:#f5d020;transform:scale(1.04);}
+#mapSelect{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.92);z-index:30;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding:20px;}
+#mapSelect h2{color:#f5d98a;font-size:22px;margin-bottom:10px;text-align:center;}
+.mapCard{background:linear-gradient(135deg,#3d2b1f,#2a1e12);border:3px solid #6b4226;border-radius:14px;padding:14px 22px;cursor:pointer;color:#e8c87a;font-size:15px;font-weight:700;width:80%;max-width:280px;text-align:center;transition:all .15s;}
+.mapCard:active{border-color:#f5d020;transform:scale(0.97);}
 .mapCard p{font-size:11px;color:#c8a86a;font-weight:400;margin-top:4px;}
 </style>
 </head>
 <body>
-<div id="ui">
+<div id="topBar">
   <div class="stat" id="liveStat">❤️ 20</div>
   <div class="stat" id="goldStat">💰 150</div>
   <div class="stat" id="waveStat">🌊 0</div>
   <div class="stat" id="scoreStat">⭐ 0</div>
-  <span style="font-size:11px;color:#c8a86a;font-weight:700;">放置:</span>
-  <button class="tbtn sel" data-type="normal" onclick="sel('normal')">🐱弓箭$40</button>
-  <button class="tbtn" data-type="fat" onclick="sel('fat')">😸砲擊$70</button>
-  <button class="tbtn" data-type="magic" onclick="sel('magic')">😻魔法$110</button>
-  <button class="tbtn" data-type="ice" onclick="sel('ice')">😼冰凍$90</button>
-  <button class="tbtn" data-type="sniper" onclick="sel('sniper')">🐈狙擊$130</button>
-  <button class="tbtn" data-type="rapid" onclick="sel('rapid')">😽速射$80</button>
-  <button class="tbtn" data-type="bomb" onclick="sel('bomb')">💣炸彈$140</button>
-
-  <button id="speedBtn" onclick="toggleSpeed()">▶ 1x</button>
-  <button id="startBtn" onclick="startWave()">▶ 開始波次</button>
 </div>
-<canvas id="canvas"></canvas>
+<div id="canvasWrap">
+  <canvas id="canvas"></canvas>
+</div>
+<div id="bottomBar">
+  <div id="towerRow">
+    <button class="tbtn sel" data-type="normal" onclick="sel('normal')">🐱 $40</button>
+    <button class="tbtn" data-type="fat" onclick="sel('fat')">😸 $70</button>
+    <button class="tbtn" data-type="magic" onclick="sel('magic')">😻 $110</button>
+    <button class="tbtn" data-type="ice" onclick="sel('ice')">😼 $90</button>
+    <button class="tbtn" data-type="sniper" onclick="sel('sniper')">🐈 $130</button>
+    <button class="tbtn" data-type="rapid" onclick="sel('rapid')">😽 $80</button>
+    <button class="tbtn" data-type="bomb" onclick="sel('bomb')">💣 $140</button>
+  </div>
+  <div id="ctrlRow">
+    <button id="speedBtn" onclick="toggleSpeed()">▶ 1x</button>
+    <button id="startBtn" onclick="startWave()">▶ 開始波次</button>
+  </div>
+</div>
 
 <div id="popup">
   <div class="pname" id="popupName"></div>
@@ -86,17 +105,45 @@ body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;overf
 <script>
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const W = canvas.width = window.innerWidth;
-const H = canvas.height = window.innerHeight - canvas.getBoundingClientRect().top;
+let W = 0, H = 0, DPR = 1;
 
-// MAPS
-const MAPS = [
-  [{x:0,y:140},{x:150,y:140},{x:150,y:300},{x:320,y:300},{x:320,y:140},{x:500,y:140},{x:500,y:320},{x:680,y:320},{x:680,y:160},{x:W,y:160}],
-  [{x:0,y:80},{x:100,y:80},{x:100,y:260},{x:240,y:260},{x:240,y:120},{x:380,y:120},{x:380,y:300},{x:520,y:300},{x:520,y:100},{x:660,y:100},{x:660,y:260},{x:W,y:260}],
-  [{x:0,y:200},{x:200,y:200},{x:200,y:100},{x:500,y:100},{x:500,y:300},{x:W,y:300}]
-];
-const PW = 52;
+function setupCanvas(){
+  const wrap = document.getElementById('canvasWrap');
+  const cw = wrap.clientWidth, ch = wrap.clientHeight;
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  canvas.style.width = cw+'px';
+  canvas.style.height = ch+'px';
+  canvas.width = cw*DPR;
+  canvas.height = ch*DPR;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  W = cw; H = ch;
+}
+setupCanvas();
+
+// MAPS - portrait friendly, function of W,H
+function makeMaps(){
+  return [
+    // Map 0: zigzag forest (S curves)
+    [{x:W*0.2,y:0},{x:W*0.2,y:H*0.16},{x:W*0.8,y:H*0.16},{x:W*0.8,y:H*0.4},{x:W*0.2,y:H*0.4},{x:W*0.2,y:H*0.64},{x:W*0.8,y:H*0.64},{x:W*0.8,y:H*0.86},{x:W*0.45,y:H*0.86},{x:W*0.45,y:H}],
+    // Map 1: maze - more zigzag
+    [{x:W*0.15,y:0},{x:W*0.15,y:H*0.13},{x:W*0.85,y:H*0.13},{x:W*0.85,y:H*0.28},{x:W*0.5,y:H*0.28},{x:W*0.5,y:H*0.42},{x:W*0.15,y:H*0.42},{x:W*0.15,y:H*0.58},{x:W*0.85,y:H*0.58},{x:W*0.85,y:H*0.73},{x:W*0.35,y:H*0.73},{x:W*0.35,y:H*0.88},{x:W*0.85,y:H*0.88},{x:W*0.85,y:H}],
+    // Map 2: short direct
+    [{x:W*0.5,y:0},{x:W*0.5,y:H*0.35},{x:W*0.18,y:H*0.35},{x:W*0.18,y:H*0.7},{x:W*0.85,y:H*0.7},{x:W*0.85,y:H}]
+  ];
+}
+let MAPS = makeMaps();
+let PW = Math.max(38, Math.min(W,H)*0.085);
+let GRID = Math.max(36, Math.round(PW*0.85));
 let PATH = MAPS[0];
+
+window.addEventListener('resize', function(){
+  setupCanvas();
+  MAPS = makeMaps();
+  PW = Math.max(38, Math.min(W,H)*0.085);
+  GRID = Math.max(36, Math.round(PW*0.85));
+  if(typeof currentMapIdx==='number') PATH = MAPS[currentMapIdx];
+  initGrass();
+});
 
 // AUDIO
 let AC;
@@ -185,6 +232,7 @@ var spawnQueue=[],spawnTimer=0,animId,tick=0,gameSpeed=1;
 var movingTower=null,popupTower=null;
 var waveGold=0,waveKills=0,pendingEvent=null;
 var grassCanvas=null;
+var currentMapIdx=0;
 
 function darken(col,amt){
   if(!col||col[0]!=='#'||col.length<7)return'#888';
@@ -202,7 +250,7 @@ function getEyeCol(type){
   return m[type]||'#88aaff';
 }
 
-// GRASS
+// PATH HELPERS
 function isOnPath(px,py){
   for(var i=0;i<PATH.length-1;i++){
     var a=PATH[i],b=PATH[i+1];
@@ -221,9 +269,10 @@ function isNearPath(px,py,extra){
   return false;
 }
 function isOccupied(gx,gy,skip){
-  return towers.some(function(t){return t!==skip&&Math.abs(t.gx-gx)<36&&Math.abs(t.gy-gy)<36;});
+  return towers.some(function(t){return t!==skip&&Math.abs(t.gx-gx)<GRID*0.85&&Math.abs(t.gy-gy)<GRID*0.85;});
 }
 function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
+function snapGrid(v){return Math.round(v/GRID)*GRID;}
 
 function initGrass(){
   grassCanvas=document.createElement('canvas');
@@ -232,13 +281,14 @@ function initGrass(){
   var g=gc.createLinearGradient(0,0,W,H);
   g.addColorStop(0,'#2a4a20');g.addColorStop(0.5,'#234018');g.addColorStop(1,'#1e3814');
   gc.fillStyle=g;gc.fillRect(0,0,W,H);
-  for(var i=0;i<180;i++){
+  var density=Math.floor(W*H/2200);
+  for(var i=0;i<density;i++){
     var x=Math.random()*W,y=Math.random()*H;
     gc.save();gc.translate(x,y);gc.globalAlpha=0.18+Math.random()*0.14;
     gc.fillStyle=Math.random()>0.5?'#4a7a30':'#3a6020';
     gc.beginPath();gc.ellipse(0,0,3+Math.random()*5,2+Math.random()*3,Math.random()*Math.PI,0,Math.PI*2);gc.fill();gc.restore();
   }
-  for(var j=0;j<60;j++){
+  for(var j=0;j<Math.floor(density/3);j++){
     var fx=Math.random()*W,fy=Math.random()*H;
     if(isOnPath(fx,fy))continue;
     var cols=['#ffdd44','#ff88aa','#ffffff','#88ddff'];
@@ -246,7 +296,7 @@ function initGrass(){
     gc.fillStyle=cols[Math.floor(Math.random()*cols.length)];
     gc.beginPath();gc.arc(0,0,2+Math.random()*2,0,Math.PI*2);gc.fill();gc.restore();
   }
-  for(var k=0;k<25;k++){
+  for(var k=0;k<Math.floor(density/6);k++){
     var tx=Math.random()*W,ty=Math.random()*H;
     if(isOnPath(tx,ty)||isNearPath(tx,ty,70))continue;
     gc.save();gc.translate(tx,ty);gc.globalAlpha=0.55+Math.random()*0.3;
@@ -282,6 +332,11 @@ function showMapSelect(){
   document.getElementById('mapSelect').style.display='flex';
 }
 function startGame(idx){
+  setupCanvas();
+  MAPS = makeMaps();
+  PW = Math.max(38, Math.min(W,H)*0.085);
+  GRID = Math.max(36, Math.round(PW*0.85));
+  currentMapIdx=idx;
   PATH=MAPS[idx];
   document.getElementById('mapSelect').style.display='none';
   towers=[];enemies=[];projectiles=[];particles=[];vfx=[];
@@ -365,11 +420,14 @@ function showPopupAt(t,cx,cy){
   else ub.style.display='none';
   document.getElementById('sellPrice').textContent='$'+Math.floor(t.def.cost*0.6*(1+(lv*0.32)));
   var p=document.getElementById('popup');p.style.display='block';
-  var top=canvas.getBoundingClientRect().top;
-  var px=cx+10,py=cy-10;
-  if(px+162>W)px=cx-162;
-  if(py+top+180>window.innerHeight)py=cy-175;
-  p.style.left=px+'px';p.style.top=(py+top)+'px';
+  var rect=canvas.getBoundingClientRect();
+  var pw=p.offsetWidth||190, ph=p.offsetHeight||200;
+  var px=cx+rect.left+12, py=cy+rect.top-10;
+  if(px+pw>window.innerWidth-8) px=cx+rect.left-pw-12;
+  if(px<8) px=8;
+  if(py+ph>window.innerHeight-8) py=window.innerHeight-ph-8;
+  if(py<8) py=8;
+  p.style.left=px+'px';p.style.top=py+'px';
 }
 function closePopup(){document.getElementById('popup').style.display='none';popupTower=null;}
 function doSell(){
@@ -386,31 +444,52 @@ function doUpgrade(){
   if(gold<uc){floatText(W/2,H/2,'金幣不足！',50,'#ff8080');return;}
   gold-=uc;popupTower.level=lv+1;sUpgrade();updateUI();spawnUpgradeVfx(popupTower.gx,popupTower.gy);
   var pp=document.getElementById('popup');
-  showPopupAt(popupTower,parseInt(pp.style.left),parseInt(pp.style.top)-canvas.getBoundingClientRect().top);
+  var rect=canvas.getBoundingClientRect();
+  showPopupAt(popupTower,parseInt(pp.style.left)-rect.left,parseInt(pp.style.top)-rect.top);
 }
 function cancelMove(){if(movingTower){movingTower.moving=false;movingTower=null;}}
 
-canvas.addEventListener('click',function(e){
+// INPUT (unified click/tap)
+function handleTap(cx, cy){
   if(gameOver||showingModal)return;
-  var r=canvas.getBoundingClientRect(),cx=e.clientX-r.left,cy=e.clientY-r.top;
   if(movingTower){
     if(isOnPath(cx,cy)){floatText(cx,cy,'不能放這！',45,'#ff8080');return;}
-    var gx=Math.round(cx/44)*44,gy=Math.round(cy/44)*44;
+    var gx=snapGrid(cx),gy=snapGrid(cy);
     if(isOnPath(gx,gy)||isOccupied(gx,gy,movingTower)){floatText(cx,cy,'位置被佔用！',45,'#ff8080');return;}
     movingTower.gx=gx;movingTower.gy=gy;movingTower.moving=false;movingTower=null;sPlace();return;
   }
-  for(var i=0;i<towers.length;i++){if(dist({x:towers[i].gx,y:towers[i].gy},{x:cx,y:cy})<26){showPopupAt(towers[i],cx,cy);return;}}
+  for(var i=0;i<towers.length;i++){if(dist({x:towers[i].gx,y:towers[i].gy},{x:cx,y:cy})<28){showPopupAt(towers[i],cx,cy);return;}}
   closePopup();
   if(isOnPath(cx,cy))return;
-  var gx2=Math.round(cx/44)*44,gy2=Math.round(cy/44)*44;
+  var gx2=snapGrid(cx),gy2=snapGrid(cy);
   if(isOnPath(gx2,gy2)||isOccupied(gx2,gy2,null))return;
   var def=TD[selType];
   if(gold<def.cost){floatText(cx,cy,'金幣不足！',50,'#ff8080');return;}
   gold-=def.cost;
   towers.push({type:selType,def:def,gx:gx2,gy:gy2,cooldown:0,level:0,shootAnim:0,bob:Math.random()*Math.PI*2,moving:false});
   sPlace();updateUI();
+}
+
+canvas.addEventListener('click',function(e){
+  var r=canvas.getBoundingClientRect();
+  handleTap(e.clientX-r.left, e.clientY-r.top);
 });
 canvas.addEventListener('mousemove',function(e){var r=canvas.getBoundingClientRect();canvas._mx=e.clientX-r.left;canvas._my=e.clientY-r.top;});
+canvas.addEventListener('touchstart',function(e){
+  e.preventDefault();
+  if(!e.touches[0])return;
+  var r=canvas.getBoundingClientRect();
+  var tx=e.touches[0].clientX-r.left, ty=e.touches[0].clientY-r.top;
+  canvas._mx=tx;canvas._my=ty;
+  handleTap(tx,ty);
+},{passive:false});
+canvas.addEventListener('touchmove',function(e){
+  e.preventDefault();
+  if(!e.touches[0])return;
+  var r=canvas.getBoundingClientRect();
+  canvas._mx=e.touches[0].clientX-r.left;
+  canvas._my=e.touches[0].clientY-r.top;
+},{passive:false});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){cancelMove();closePopup();}});
 
 // WAVE MODAL
@@ -558,9 +637,8 @@ function drawPath(){
   var dg=ctx.createLinearGradient(0,0,W,H);dg.addColorStop(0,'#8b6940');dg.addColorStop(0.5,'#a07848');dg.addColorStop(1,'#7a5a30');
   ctx.strokeStyle=dg;ctx.lineWidth=PW;
   ctx.beginPath();ctx.moveTo(PATH[0].x,PATH[0].y);for(var j=1;j<PATH.length;j++)ctx.lineTo(PATH[j].x,PATH[j].y);ctx.stroke();
-  ctx.strokeStyle='rgba(100,70,30,.3)';ctx.lineWidth=PW-12;ctx.setLineDash([18,12]);
+  ctx.strokeStyle='rgba(100,70,30,.3)';ctx.lineWidth=Math.max(6,PW-12);ctx.setLineDash([18,12]);
   ctx.beginPath();ctx.moveTo(PATH[0].x,PATH[0].y);for(var k=1;k<PATH.length;k++)ctx.lineTo(PATH[k].x,PATH[k].y);ctx.stroke();ctx.setLineDash([]);
-  // Stones
   for(var si=0;si<PATH.length-1;si++){
     var a=PATH[si],b=PATH[si+1],steps=Math.hypot(b.x-a.x,b.y-a.y)/30;
     for(var ss=1;ss<steps;ss++){
@@ -570,7 +648,6 @@ function drawPath(){
       ctx.beginPath();ctx.ellipse(px2+o1,py2+o2,4+seed%4,3+seed%3,(seed%4)*0.5,0,Math.PI*2);ctx.fill();
     }
   }
-  // Start/end markers
   ctx.save();ctx.translate(PATH[0].x,PATH[0].y);
   ctx.fillStyle='#cc4444';ctx.beginPath();ctx.arc(0,0,16,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle='#ff8888';ctx.lineWidth=2;ctx.stroke();
@@ -586,13 +663,9 @@ function drawTower(t){
   var catCol=getCatCol(t.type,lv);
   var bob=Math.sin(tick*0.04+t.bob)*2.5;
   ctx.save();ctx.translate(t.gx,t.gy+bob);
-  // Shoot pulse
   if(t.shootAnim>0){ctx.globalAlpha=t.shootAnim/10*0.3;ctx.fillStyle=t.def.col;ctx.beginPath();ctx.arc(0,0,32,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
-  // Magic orbiting stars
   if(t.type==='magic'){for(var i=0;i<(lv+1);i++){var a=tick*0.07+i*Math.PI*2/(lv+1);ctx.save();ctx.globalAlpha=0.8;drawStar(Math.cos(a)*29,Math.sin(a)*29,5+lv,a,'#cc88ff');ctx.restore();}}
-  // Poison glow
   if(t.type==='poison'){ctx.globalAlpha=0.15+Math.sin(tick*0.09)*0.08;ctx.fillStyle='#66ee88';ctx.beginPath();ctx.arc(0,0,28,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
-  // Wood stump base (always drawn, even when moving)
   ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(0,22,22,8,0,0,Math.PI*2);ctx.fill();
   var sg=ctx.createLinearGradient(-20,8,20,8);
   sg.addColorStop(0,'#8b5e2e');sg.addColorStop(0.4,'#c48540');sg.addColorStop(0.7,'#a06828');sg.addColorStop(1,'#6b3e18');
@@ -604,7 +677,6 @@ function drawTower(t){
   ctx.strokeStyle='rgba(80,40,10,.3)';ctx.lineWidth=1;
   for(var ri=0;ri<3;ri++){ctx.beginPath();ctx.ellipse(0,10,8+ri*4,3+ri,0,0,Math.PI*2);ctx.stroke();}
   for(var li=0;li<lv;li++){ctx.save();ctx.globalAlpha=0.95;drawStar(-8+li*8,6,4.5,-Math.PI/2,'#f5d020');ctx.restore();}
-  // Cat body
   var catY=-8;
   ctx.fillStyle='rgba(0,0,0,.22)';ctx.beginPath();ctx.ellipse(2,catY+14,14,5,0,0,Math.PI*2);ctx.fill();
   if(t.moving){ctx.globalAlpha=0.65;}
@@ -613,7 +685,6 @@ function drawTower(t){
   ctx.fillStyle=bg;ctx.beginPath();ctx.arc(0,catY,15,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle=darken(catCol,0.35);ctx.lineWidth=1.5;ctx.stroke();
   ctx.fillStyle='rgba(255,255,255,.22)';ctx.beginPath();ctx.ellipse(0,catY+4,7,8,0,0,Math.PI*2);ctx.fill();
-  // Ears
   var ec=darken(catCol,0.15);
   ctx.fillStyle=ec;
   ctx.beginPath();ctx.moveTo(-12,catY-10);ctx.lineTo(-7,catY-22);ctx.lineTo(-2,catY-10);ctx.fill();
@@ -621,7 +692,6 @@ function drawTower(t){
   ctx.fillStyle='rgba(255,160,180,.6)';
   ctx.beginPath();ctx.moveTo(-10,catY-11);ctx.lineTo(-7,catY-19);ctx.lineTo(-4,catY-11);ctx.fill();
   ctx.beginPath();ctx.moveTo(4,catY-11);ctx.lineTo(7,catY-19);ctx.lineTo(10,catY-11);ctx.fill();
-  // Eyes
   var eo=t.shootAnim>0?0.3:1;
   ctx.fillStyle='#1a1a1a';
   ctx.beginPath();ctx.ellipse(-5,catY-1,3,3.5*eo,0,0,Math.PI*2);ctx.fill();
@@ -633,14 +703,11 @@ function drawTower(t){
   ctx.beginPath();ctx.ellipse(-5,catY-1,2,2.5*eo,0,0,Math.PI*2);ctx.fill();
   ctx.beginPath();ctx.ellipse(5,catY-1,2,2.5*eo,0,0,Math.PI*2);ctx.fill();
   ctx.globalAlpha=t.moving?0.65:1;
-  // Nose
   ctx.fillStyle='#ffaacc';ctx.beginPath();ctx.arc(0,catY+3,2.5,0,Math.PI*2);ctx.fill();
-  // Whiskers
   ctx.strokeStyle='rgba(255,255,255,.65)';ctx.lineWidth=1;
   var wh=[[-3,0,1],[-3,0,0],[-3,0,-1],[3,0,1],[3,0,0],[3,0,-1]];
   wh.forEach(function(w){ctx.beginPath();ctx.moveTo(w[0],catY+3);ctx.lineTo(w[0]<0?-14:14,catY+3+w[2]*2);ctx.stroke();});
   ctx.globalAlpha=1;
-  // Type accessories
   if(t.type==='magic'){
     ctx.fillStyle=darken(catCol,0.2);ctx.beginPath();ctx.moveTo(-10,catY-22);ctx.lineTo(10,catY-22);ctx.lineTo(0,catY-40);ctx.closePath();ctx.fill();
     ctx.strokeStyle='#ffcc44';ctx.lineWidth=1;ctx.stroke();
@@ -661,12 +728,10 @@ function drawTower(t){
     ctx.fillStyle='#f5d020';ctx.beginPath();ctx.moveTo(-8,catY-22);ctx.lineTo(-8,catY-30);ctx.lineTo(-4,catY-26);ctx.lineTo(0,catY-32);ctx.lineTo(4,catY-26);ctx.lineTo(8,catY-30);ctx.lineTo(8,catY-22);ctx.closePath();ctx.fill();
     ctx.strokeStyle='#c8a800';ctx.lineWidth=1;ctx.stroke();
   }
-  // Moving dashed ring
   if(t.moving){
     ctx.globalAlpha=0.7;ctx.strokeStyle='#f5d020';ctx.lineWidth=2.5;ctx.setLineDash([5,4]);
     ctx.beginPath();ctx.arc(0,catY,22,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
   }
-  // Selected highlight
   if(t===popupTower){ctx.strokeStyle='#f5d020';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,catY,22,0,Math.PI*2);ctx.stroke();}
   ctx.restore();
 }
@@ -742,7 +807,7 @@ function drawRangePreview(){
   var mx=canvas._mx,my=canvas._my;
   for(var i=0;i<towers.length;i++){
     var t=towers[i];
-    if(dist({x:t.gx,y:t.gy},{x:mx,y:my})<26){
+    if(dist({x:t.gx,y:t.gy},{x:mx,y:my})<28){
       var st=tStats(t);ctx.save();ctx.globalAlpha=0.1;ctx.fillStyle=t.def.col;ctx.beginPath();ctx.arc(t.gx,t.gy,st.range,0,Math.PI*2);ctx.fill();ctx.globalAlpha=0.35;ctx.strokeStyle=t.def.col;ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();return;
     }
   }
@@ -752,7 +817,7 @@ function drawMovePreview(){
   if(!movingTower||!canvas._mx)return;
   var mx=canvas._mx,my=canvas._my;
   if(!isOnPath(mx,my)){
-    var gx=Math.round(mx/44)*44,gy=Math.round(my/44)*44;
+    var gx=snapGrid(mx),gy=snapGrid(my);
     var ok=!isOnPath(gx,gy)&&!isOccupied(gx,gy,movingTower);
     ctx.save();ctx.globalAlpha=0.4;ctx.fillStyle=ok?movingTower.def.col:'#ff4444';ctx.beginPath();ctx.arc(mx,my,18,0,Math.PI*2);ctx.fill();
     ctx.font='18px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(movingTower.def.emoji,mx,my);ctx.restore();
@@ -760,9 +825,9 @@ function drawMovePreview(){
 }
 function drawHUD(){
   var msg='';
-  if(!waveRunning&&!showingModal){msg=wave===0?'點地圖放置貓咪 ✦ 點貓咪可升級/移動/賣出 ✦ 按「開始波次」':'波次結束！準備好了就繼續';}
-  if(movingTower)msg='選擇新位置放置 ✦ 按 ESC 取消';
-  if(msg){ctx.save();ctx.fillStyle='rgba(20,12,5,.7)';ctx.fillRect(0,H-28,W,28);ctx.fillStyle='#e8c87a';ctx.font='bold 13px sans-serif';ctx.textAlign='center';ctx.fillText(msg,W/2,H-10);ctx.restore();}
+  if(!waveRunning&&!showingModal){msg=wave===0?'點地圖放置貓咪 ✦ 點貓咪可升級/移動/賣出':'點「開始波次」繼續';}
+  if(movingTower)msg='選擇新位置放置';
+  if(msg){ctx.save();ctx.fillStyle='rgba(20,12,5,.7)';ctx.fillRect(0,H-26,W,26);ctx.fillStyle='#e8c87a';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText(msg,W/2,H-9);ctx.restore();}
 }
 
 function loop(){
@@ -777,8 +842,7 @@ function loop(){
   animId=requestAnimationFrame(loop);
 }
 
-// Boot
-(function boot(){ctx.fillStyle='#1a2e1a';ctx.fillRect(0,0,W,H);animId=requestAnimationFrame(boot);})();
+(function boot(){ctx.fillStyle='#1a2e1a';ctx.fillRect(0,0,W,H);})();
 </script>
 </body>
 </html>
