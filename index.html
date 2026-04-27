@@ -188,7 +188,7 @@ function sEvent(){[392,494,587,784].forEach(function(f,i){nt(f,'sine',0.12,0.22,
 var TD = {
   normal:{name:'弓箭貓',emoji:'🐱',cost:40, dmg:8, range:90, rate:55, col:'#e8b8c8',proj:'normal'},
   fat:   {name:'砲擊貓',emoji:'😸',cost:70, dmg:22,range:100,rate:120,col:'#e8c878',proj:'fat'},
-  magic: {name:'魔法貓',emoji:'😻',cost:110,dmg:10,range:105,rate:90, col:'#c8a8f8',proj:'magic',aoe:true,maxTargets:3},
+  magic: {name:'魔法貓',emoji:'😻',cost:110,dmg:20,range:110,rate:90, col:'#c8a8f8',proj:'magic',aoe:true,maxTargets:4},
   ice:   {name:'冰凍貓',emoji:'😼',cost:90, dmg:5, range:95, rate:70, col:'#a8e8f8',proj:'ice',slow:true},
   sniper:{name:'狙擊貓',emoji:'🐈',cost:130,dmg:55,range:210,rate:180,col:'#a8e8a8',proj:'sniper'},
   rapid: {name:'速射貓',emoji:'😽',cost:80, dmg:4, range:80, rate:25, col:'#f8d0a0',proj:'rapid'}
@@ -362,7 +362,7 @@ function startWave(){
 }
 function buildWave(){
   spawnQueue=[];spawnTimer=0;
-  var diff=Math.pow(1.2, wave),avail=[0];
+  var diff=Math.pow(1.15, wave - 1),avail=[0];
   if(wave>=2)avail.push(1);
   if(wave>=3)avail.push(2);
   if(wave>=4)avail.push(5);
