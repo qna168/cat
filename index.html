@@ -736,8 +736,8 @@ function drawTower(t){
   // 名稱標籤
   ctx.globalAlpha=t.moving?0.55:0.92;
   ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillStyle='rgba(0,0,0,0.65)';ctx.fillRect(-23,30,46,14);
-  ctx.fillStyle='#f5e8a0';ctx.fillText(t.def.name,0,37);
+  ctx.fillStyle='rgba(0,0,0,0.65)';ctx.fillRect(-23,-58,46,14);
+  ctx.fillStyle='#f5e8a0';ctx.fillText(t.def.name,0,-51);
   ctx.globalAlpha=1;
   ctx.restore();
 }
