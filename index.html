@@ -246,9 +246,10 @@ function getEyeCol(type){
 
 // PATH HELPERS
 function isOnPath(px,py){
+  var w=PW/2-4;
   for(var i=0;i<PATH.length-1;i++){
     var a=PATH[i],b=PATH[i+1];
-    if(px>=Math.min(a.x,b.x)-PW/2&&px<=Math.max(a.x,b.x)+PW/2&&py>=Math.min(a.y,b.y)-PW/2&&py<=Math.max(a.y,b.y)+PW/2)return true;
+    if(px>=Math.min(a.x,b.x)-w&&px<=Math.max(a.x,b.x)+w&&py>=Math.min(a.y,b.y)-w&&py<=Math.max(a.y,b.y)+w)return true;
   }
   return false;
 }
@@ -264,7 +265,7 @@ function isNearPath(px,py,extra){
 }
 function isValidBuildSpot(px,py){
   if(isOnPath(px,py))return false;
-  return isNearPath(px,py,GRID*1.2);
+  return isNearPath(px,py,GRID*0.8);
 }
 function isOccupied(gx,gy,skip){
   return towers.some(function(t){return t!==skip&&Math.abs(t.gx-gx)<GRID*0.85&&Math.abs(t.gy-gy)<GRID*0.85;});
