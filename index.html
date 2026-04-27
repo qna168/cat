@@ -17,9 +17,7 @@ body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;-webk
 #bottomBar{display:flex;flex-direction:column;gap:5px;padding:6px;background:linear-gradient(0deg,#3d2b1f,#2d1f15);border-top:2px solid #6b4226;flex-shrink:0;}
 #towerRow{display:flex;gap:5px;overflow-x:auto;padding:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 #towerRow::-webkit-scrollbar{display:none;}
-.tbtn{border:2px solid #6b4226;border-radius:11px;padding:7px 10px;font-size:13px;cursor:pointer;background:linear-gradient(135deg,#4a2e18,#3a2010);color:#e8c87a;font-weight:700;flex-shrink:0;min-width:68px;transition:transform .08s;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2;}
-.tbtn .tname{font-size:12px;white-space:nowrap;}
-.tbtn .tprice{font-size:11px;color:#f5d020;white-space:nowrap;}
+.tbtn{border:2px solid #6b4226;border-radius:11px;padding:9px 11px;font-size:14px;cursor:pointer;background:linear-gradient(135deg,#4a2e18,#3a2010);color:#e8c87a;white-space:nowrap;font-weight:700;flex-shrink:0;min-width:72px;transition:transform .08s;}
 .tbtn:active{transform:scale(0.94);}
 .tbtn.sel{border-color:#f5d020;background:linear-gradient(135deg,#7a5020,#5a3810);box-shadow:0 0 10px rgba(245,208,32,.5);color:#fff5b0;}
 #ctrlRow{display:flex;gap:6px;}
@@ -59,13 +57,13 @@ body{background:#1a2e1a;font-family:'Segoe UI',sans-serif;user-select:none;-webk
 </div>
 <div id="bottomBar">
   <div id="towerRow">
-    <button class="tbtn sel" data-type="normal" onclick="sel('normal')"><span>🐱 弓箭貓</span><span class="tprice">$40</span></button>
-    <button class="tbtn" data-type="fat" onclick="sel('fat')"><span>😸 砲擊貓</span><span class="tprice">$70</span></button>
-    <button class="tbtn" data-type="magic" onclick="sel('magic')"><span>😻 魔法貓</span><span class="tprice">$110</span></button>
-    <button class="tbtn" data-type="ice" onclick="sel('ice')"><span>😼 冰凍貓</span><span class="tprice">$90</span></button>
-    <button class="tbtn" data-type="sniper" onclick="sel('sniper')"><span>🐈 狙擊貓</span><span class="tprice">$130</span></button>
-    <button class="tbtn" data-type="rapid" onclick="sel('rapid')"><span>😽 速射貓</span><span class="tprice">$80</span></button>
-    <button class="tbtn" data-type="bomb" onclick="sel('bomb')"><span>💣 炸彈貓</span><span class="tprice">$140</span></button>
+    <button class="tbtn sel" data-type="normal" onclick="sel('normal')">🐱 $40</button>
+    <button class="tbtn" data-type="fat" onclick="sel('fat')">😸 $70</button>
+    <button class="tbtn" data-type="magic" onclick="sel('magic')">😻 $110</button>
+    <button class="tbtn" data-type="ice" onclick="sel('ice')">😼 $90</button>
+    <button class="tbtn" data-type="sniper" onclick="sel('sniper')">🐈 $130</button>
+    <button class="tbtn" data-type="rapid" onclick="sel('rapid')">😽 $80</button>
+    <button class="tbtn" data-type="bomb" onclick="sel('bomb')">💣 $140</button>
   </div>
   <div id="ctrlRow">
     <button id="speedBtn" onclick="toggleSpeed()">▶ 1x</button>
@@ -735,6 +733,12 @@ function drawTower(t){
     ctx.beginPath();ctx.arc(0,catY,22,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
   }
   if(t===popupTower){ctx.strokeStyle='#f5d020';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,catY,22,0,Math.PI*2);ctx.stroke();}
+  // 名稱標籤
+  ctx.globalAlpha=t.moving?0.55:0.92;
+  ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(-20,26,40,13);
+  ctx.fillStyle='#f5e8a0';ctx.fillText(t.def.name,0,28);
+  ctx.globalAlpha=1;
   ctx.restore();
 }
 
